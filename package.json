@@ -16,6 +16,12 @@
     "ajax"
   ],
   "author": "Chris Davies <ferociousturtle@gmail.com>",
+  "contributors": [
+    {
+      "name": "Vinay M",
+      "email": "rmdort@gmail.com"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://gitlab.com/olasearch/alite/issues"
