@@ -14,31 +14,6 @@ function alite(opts) {
       }
   }
 
-  function serializeQueryString(o, trad) {
-    var prefix, i
-      , traditional = trad || false
-      , s = []
-      , enc = encodeURIComponent
-      , add = function (key, value) {
-          // If value is a function, invoke it and return its value
-          value = ('function' === typeof value) ? value() : (value == null ? '' : value)
-          s[s.length] = enc(key) + '=' + enc(value)
-        }
-    // If an array was passed in, assume that it is an array of form elements.
-    if (Array.isArray(o)) {
-      for (i = 0; o && i < o.length; i++) add(o[i]['name'], o[i]['value'])
-    } else {
-      // If traditional, encode the "old" way (the way 1.3.2 or older
-      // did it), otherwise encode params recursively.
-      for (prefix in o) {
-        if (o.hasOwnProperty(prefix)) buildParams(prefix, o[prefix], traditional, add)
-      }
-    }
-
-    // spaces should be + according to spec
-    return s.join('&').replace(/%20/g, '+')
-  }
-
   function buildParams(prefix, obj, traditional, add) {
     var name, i, v
       , rbracket = /\[\]$/
@@ -66,8 +41,29 @@ function alite(opts) {
     }
   }
 
-  function urlappend (url, s) {
-    return url + (/\?/.test(url) ? '&' : '?') + s
+  function serializeQueryString(o, trad) {
+    var prefix, i
+      , traditional = trad || false
+      , s = []
+      , enc = encodeURIComponent
+      , add = function (key, value) {
+          // If value is a function, invoke it and return its value
+          value = ('function' === typeof value) ? value() : (value == null ? '' : value)
+          s[s.length] = enc(key) + '=' + enc(value)
+        }
+    // If an array was passed in, assume that it is an array of form elements.
+    if (Array.isArray(o)) {
+      for (i = 0; o && i < o.length; i++) add(o[i]['name'], o[i]['value'])
+    } else {
+      // If traditional, encode the "old" way (the way 1.3.2 or older
+      // did it), otherwise encode params recursively.
+      for (prefix in o) {
+        if (o.hasOwnProperty(prefix)) buildParams(prefix, o[prefix], traditional, add)
+      }
+    }
+
+    // spaces should be + according to spec
+    return s.join('&').replace(/%20/g, '+')
   }
 
   function response(req) {
@@ -78,12 +74,13 @@ function alite(opts) {
   }
 
   return new Promise(function(resolve, reject) {
-    var req = (opts.xhr || noop)() || new XMLHttpRequest();
-    var data = typeof opts.data !== 'string' ? serializeQueryString(opts.data) : (opts.data || null);
     var url = opts.url
+    var method = (opts.method || 'GET').toUpperCase()
+    var req = (opts.xhr || noop)() || new XMLHttpRequest();
+    var data = opts.raw !== true && typeof opts.data !== 'string' ? serializeQueryString(opts.data) : (opts.data || null);
     var headers = Object.assign({}, defaultHeaders, opts.headers)
 
-    if (opts.method == 'GET' && data) {
+    if (method === 'get') {
       url = urlappend(url, data)
       data = null
     }
@@ -91,16 +88,17 @@ function alite(opts) {
     req.onreadystatechange = function () {
       if (req.readyState == 4) {
         if (req.status >= 200 && req.status < 300) {
-          resolve({ response: response(req), xhr: req });
+          resolve(response(req));
         } else {
-          reject({ response: response(req), xhr: req });
+          reject(response(req));
         }
 
         (alite.ajaxStop || noop)(req, opts);
       }
     }
-    
-    req.open(opts.method, url);
+
+    req.open(method, url);
+    // !opts.raw && req.setRequestHeader('Content-Type', 'application/json');
 
     if (headers) {
       for (var name in headers) {
@@ -111,7 +109,7 @@ function alite(opts) {
     (alite.ajaxStart || noop)(req, opts);
     (opts.ajaxStart || noop)(req);
 
-    req.send(data);
+    req.send(data || undefined);
   })
 }
 

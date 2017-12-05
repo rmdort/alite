@@ -17,15 +17,15 @@ describe('Alite', function () {
   });
 
   it('posts', function (done) {
-    sendData('POST', '/users', { hello: 'world' }, done);
+    sendData('POST', '/users', JSON.stringify({ hello: 'world' }), done);
   });
 
   it('puts', function (done) {
-    sendData('PUT', '/users', { name: 'Joe' }, done);
+    sendData('PUT', '/users', JSON.stringify({ name: 'Joe' }), done);
   });
 
   it('patches', function (done) {
-    sendData('PATCH', '/users', { name: 'Shmo' }, done);
+    sendData('PATCH', '/users', JSON.stringify({ name: 'Shmo' }), done);
   });
 
   it('parses JSON-like responses', function (done) {
@@ -152,6 +152,9 @@ function sendData(method, url, data, done) {
     url: url,
     data: data,
     method: method,
+    headers: {
+      'Content-Type': 'application/json'
+    },
     xhr: function () { return req }
   }).then(function (result) {
     expect(result).toEqual('OK');
@@ -161,7 +164,7 @@ function sendData(method, url, data, done) {
 
   expect(req.method.toLowerCase()).toEqual(method.toLowerCase());
   expect(req.url).toEqual(url);
-  data && expect(req.sent).toEqual(JSON.stringify(data));
+  data && expect(req.sent).toEqual(data);
 
   req.exec(200, 'OK');
 }
