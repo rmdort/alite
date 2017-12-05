@@ -1,6 +1,9 @@
 function alite(opts) {
   function noop() { }
 
+  const readyState = 'readyState'
+  const contentType = 'Content-Type'
+  const requestedWith = 'X-Requested-With'
   const defaultHeaders = {
       'contentType': 'application/x-www-form-urlencoded'
     , 'requestedWith': 'xmlHttpRequest'
@@ -78,7 +81,6 @@ function alite(opts) {
     var method = (opts.method || 'GET').toUpperCase()
     var req = (opts.xhr || noop)() || new XMLHttpRequest();
     var data = opts.raw !== true && typeof opts.data !== 'string' ? serializeQueryString(opts.data) : (opts.data || null);
-    var headers = Object.assign({}, defaultHeaders, opts.headers)
 
     if (method === 'get') {
       url = urlappend(url, data)
@@ -100,10 +102,18 @@ function alite(opts) {
     req.open(method, url);
     // !opts.raw && req.setRequestHeader('Content-Type', 'application/json');
 
-    if (headers) {
-      for (var name in headers) {
-        req.setRequestHeader(name, headers[name]);
-      }
+    /* Add headers */
+    var headers = opts['headers'] || {}
+      , h
+
+    headers['Accept'] = headers['Accept']
+      || defaultHeaders['accept'][opts['type']]
+      || defaultHeaders['accept']['*']
+    var isAFormData = typeof FormData !== 'undefined' && (opts['data'] instanceof FormData);
+
+    if (!headers[contentType] && !isAFormData) headers[contentType] = opts['contentType'] || defaultHeaders['contentType']
+    for (h in headers) {
+      headers.hasOwnProperty(h) && 'setRequestHeader' in req && req.setRequestHeader(h, headers[h])
     }
 
     (alite.ajaxStart || noop)(req, opts);

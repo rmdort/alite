@@ -1,11 +1,17 @@
 # Alite
 
+Fork of https://github.com/chrisdavies/alite
+
 A simple, tiny promise-based AJAX library.
 
 - Zero dependencies
 - Less than 450 bytes minified and gzipped
 
-[![Build Status](https://travis-ci.org/chrisdavies/alite.svg?branch=master)](https://travis-ci.org/chrisdavies/alite)
+## Install
+
+````
+yarn add @olasearch/alit
+````
 
 ## Usage
 
