@@ -1,6 +1,6 @@
 {
   "name": "@olasearch/alite",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Tiny ajax helper",
   "main": "alite.js",
   "directories": {},
