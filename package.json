@@ -1,11 +1,12 @@
 {
   "name": "@olasearch/alite",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Tiny ajax helper",
-  "main": "alite.js",
+  "main": "alite.dist.js",
   "directories": {},
   "scripts": {
     "test": "jasmine-node test/*.spec.js",
+    "build": "BABEL_ENV=production babel alite.js --out-file alite.dist.js",
     "min": "uglifyjs alite.js --source-map alite.min.js.map -m -c -o alite.min.js && echo 'Minified size' && cat alite.min.js | gzip -9f | wc -c"
   },
   "repository": {
@@ -28,6 +29,8 @@
   },
   "homepage": "https://gitlab.com/olasearch/alite",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "jasmine-node": "^1.14.5"
   }
 }
