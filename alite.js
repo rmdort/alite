@@ -69,6 +69,10 @@ function alite(opts) {
     return s.join('&').replace(/%20/g, '+')
   }
 
+  function urlappend (url, s) {
+    return url + (/\?/.test(url) ? '&' : '?') + s
+  }
+
   function response(req) {
     var responseText = req && req.responseText;
     var isJson = /^[\{\[]/.test(responseText);
