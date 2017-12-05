@@ -73,13 +73,6 @@ function alite(opts) {
     return url + (/\?/.test(url) ? '&' : '?') + s
   }
 
-  function response(req) {
-    var responseText = req && req.responseText;
-    var isJson = /^[\{\[]/.test(responseText);
-
-    return isJson ? JSON.parse(responseText) : responseText;
-  }
-
   return new Promise(function(resolve, reject) {
     var url = opts.url
     var method = (opts.method || 'GET').toUpperCase()
@@ -94,9 +87,9 @@ function alite(opts) {
     req.onreadystatechange = function () {
       if (req.readyState == 4) {
         if (req.status >= 200 && req.status < 300) {
-          resolve(response(req));
+          resolve(req);
         } else {
-          reject(response(req));
+          reject(req);
         }
 
         (alite.ajaxStop || noop)(req, opts);
