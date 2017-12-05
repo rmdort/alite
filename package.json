@@ -1,6 +1,6 @@
 {
-  "name": "alite",
-  "version": "0.1.4",
+  "name": "@olasearch/alite",
+  "version": "1.0.1",
   "description": "Tiny ajax helper",
   "main": "alite.js",
   "directories": {},
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chrisdavies/alite"
+    "url": "https://gitlab.com/olasearch/alite"
   },
   "keywords": [
     "ajax"
@@ -18,9 +18,9 @@
   "author": "Chris Davies <ferociousturtle@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/chrisdavies/alite/issues"
+    "url": "https://gitlab.com/olasearch/alite/issues"
   },
-  "homepage": "https://github.com/chrisdavies/alite",
+  "homepage": "https://gitlab.com/olasearch/alite",
   "devDependencies": {
     "jasmine-node": "^1.14.5"
   }
